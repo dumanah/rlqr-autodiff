@@ -1,12 +1,9 @@
 import jax
 import numpy as np
 import jax.numpy as jnp
-from jax import debug
-from jax import grad, jit, lax, random, jacfwd, jacrev
+from jax import grad, jit, lax, random, jacfwd, jacrev, debug
 from jax.numpy.linalg import cholesky as chol
 from jax.numpy.linalg import inv, eigh
-import time
-import numpy as np
 from functools import partial
 from tabulate import tabulate
 import pyqtgraph as pg
@@ -394,12 +391,11 @@ class RobustLQRSolver:
 #==========================SOLVER INPUT============================
 
 N = 20 # Horizon length
-# UNCOMMENT TO SEE WHAT HAPPENS TO NEWTON DECREMENT
-# N = 50 
+# N = 50 # no zero newton decrement
 # N = 100 
 
 n = 4 # State dimension
-m = 2  # Control input dimension
+m = 2  # Control input dimensison
 z = m
 w = m
 p = z
