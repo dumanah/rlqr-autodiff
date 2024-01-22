@@ -362,7 +362,7 @@ class RobustLQRSolver:
     
     
     def init_pyqtsubplots(self, num_plots):
-        self.win = pg.GraphicsLayoutWidget(show=True,size=(1080,360))
+        self.win = pg.GraphicsLayoutWidget(show=True,size=(1600,400))
         self.win.setWindowTitle("Robust LQR Solver")
         pg.setConfigOptions(antialias=True)
         self.plts = [self.win.addPlot(row=0,col=i) for i in range(num_plots)]
@@ -393,7 +393,7 @@ class RobustLQRSolver:
 # Example usage
 #==========================SOLVER INPUT============================
 
-N = 10 #Horizon length
+N = 20 # Horizon length
 # UNCOMMENT TO SEE WHAT HAPPENS TO NEWTON DECREMENT
 # N = 50 
 # N = 100 
@@ -404,10 +404,10 @@ z = m
 w = m
 p = z
 
-A = np.loadtxt('Ad.txt',usecols=range(n))
+A = np.loadtxt('Ak_mat.txt',usecols=range(n))
 A = jnp.array(A[:N*n].reshape(N,n,n))
 
-B1 = np.loadtxt('Bd.txt',usecols=range(m))
+B1 = np.loadtxt('Bk_mat.txt',usecols=range(m))
 B1 = jnp.array(B1[:N*n].reshape(N,n,m))
 
 B2 = B1
@@ -417,10 +417,10 @@ D1 = jnp.zeros((N,z,m))
 D1 = D1.at[:,:,].set(jnp.eye(z))
 D2 = jnp.zeros((N,z,w))
 
-P_N = 10*jnp.eye(n)
-Sigma = 0.01*jnp.eye(n)
-Qk = jnp.eye(n)
-Rk = jnp.eye(m)
+P_N = 100*jnp.eye(n) # Terminal cost
+Sigma = 0.01*jnp.eye(n) # Initial state covariance matrix   
+Qk = jnp.eye(n) # stage state cost
+Rk = jnp.eye(m) # stage control cost
 
 N_gen = jnp.zeros((N*p,N*p,N*p))
 for i in range(N*p):
@@ -441,8 +441,10 @@ lmbda_sol,optimal_cost, K = rlqr_solver.solve()
 print("Optimal lambda sequence solution:\n",lmbda_sol)
 print("Optimal primal cost: %0.9f" % optimal_cost)
 
-#saving the optimal state-feedback matrix sequence
+'''
+#Saving the optimal state-feedback matrix sequence
 K_np = np.asarray(K)
 with open('Kk.txt', 'w') as outfile:
     for Kk in K_np:
         np.savetxt(outfile,Kk,delimiter=' ')
+'''
