@@ -48,7 +48,7 @@ class RobustLQRSolver:
         
         #solver options
         self.tmax = 1e10
-        self.alpha_min = 1e-12
+        self.alpha_min = 1e-10
         self.mu = 10
         self.tol_rel_gap = 1e-8
         
@@ -390,9 +390,7 @@ class RobustLQRSolver:
 # Example usage
 #==========================SOLVER INPUT============================
 
-N = 20 # Horizon length
-# N = 50 # no zero newton decrement
-# N = 100 
+N = 101 # Horizon length max length: 101
 
 n = 4 # State dimension
 m = 2  # Control input dimensison
@@ -413,7 +411,7 @@ D1 = jnp.zeros((N,z,m))
 D1 = D1.at[:,:,].set(jnp.eye(z))
 D2 = jnp.zeros((N,z,w))
 
-P_N = 100*jnp.eye(n) # Terminal cost
+P_N = 1000*jnp.eye(n) # Terminal cost
 Sigma = 0.01*jnp.eye(n) # Initial state covariance matrix   
 Qk = jnp.eye(n) # stage state cost
 Rk = jnp.eye(m) # stage control cost
